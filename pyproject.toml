@@ -1,0 +1,13 @@
+[tool.pylint.master]
+load-plugins=["pylint_pytest"]
+disable=[
+    "missing-module-docstring",
+    "too-few-public-methods",
+]
+
+[tool.pylint.format]
+max-line-length = 120
+
+[build-system]
+requires = ["setuptools>=43.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
