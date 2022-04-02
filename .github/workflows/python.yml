@@ -37,8 +37,8 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/requirements-dev.txt') }}
       - name: Run tests
         run: |
-          coverage run -m pytest
-          coverage xml
+          python3 -m coverage run -m pytest
+          python3 -m coverage xml
       - name: Code Coverage
         uses: codecov/codecov-action@v2
         with:
@@ -55,7 +55,7 @@ jobs:
           path: ~/.m2/repository
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/requirements-dev.txt') }}
       - name: Run linting
-        run: pylint type_validators
+        run: python3 -m pylint type_validators
 
   Typing:
     needs: [Dependencies]
@@ -68,4 +68,4 @@ jobs:
           path: ~/.m2/repository
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/requirements-dev.txt') }}
       - name: Run static type checking
-        run: mypy type_validators
+        run: python3 -m mypy type_validators
