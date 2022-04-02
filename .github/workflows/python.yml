@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  Dependencies:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -25,56 +25,15 @@ jobs:
             ${{ runner.os }}-pip-
       - name: Install dependencies
         run: pip3 install -r requirements.txt -r requirements-dev.txt
-  Tests:
-    needs: [Dependencies]
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python }}
-      - uses: actions/cache@v2
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/requirements-dev.txt') }}
       - name: Run tests
         run: |
-          python3 -m coverage run -m pytest
-          python3 -m coverage xml
+          coverage run -m pytest
+          coverage xml
       - name: Code Coverage
         uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-
-  Linting:
-    needs: [Dependencies]
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python }}
-      - uses: actions/cache@v2
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/requirements-dev.txt') }}
-      - name: Run linting
-        run: python3 -m pylint type_validators
-
-  Typing:
-    needs: [Dependencies]
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python }}
-      - uses: actions/cache@v2
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/requirements-dev.txt') }}
-      - name: Run static type checking
-        run: python3 -m mypy type_validators
+      - name: Linting
+        run: pylint type_validators
+      - name: Static type checking
+        run: mypy type_validators
